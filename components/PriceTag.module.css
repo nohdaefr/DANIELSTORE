@@ -1,0 +1,45 @@
+.tag {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: flex-start;
+  padding: 0.3rem 0.7rem 0.35rem;
+  background: var(--color-tag);
+  color: var(--color-tag-ink);
+  border-radius: 3px var(--radius-sm) var(--radius-sm) 3px;
+  /* the little punched hole of a shelf tag */
+  background-image: radial-gradient(circle at calc(100% - 7px) 9px, var(--color-surface) 2.5px, transparent 3px);
+}
+
+.amount {
+  display: inline-flex;
+  align-items: flex-start;
+  font-family: var(--font-display);
+  line-height: 0.85;
+  font-variant-numeric: tabular-nums;
+}
+
+.currency {
+  font-size: 1.15rem;
+  margin-top: 0.2rem;
+  margin-inline-end: 0.12rem;
+}
+
+.shekels {
+  font-size: 2.6rem;
+}
+
+.agorot {
+  font-size: 1.25rem;
+  margin-top: 0.15rem;
+  margin-inline-start: 0.08rem;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.unit {
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 0.15rem;
+}

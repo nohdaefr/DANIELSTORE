@@ -1,0 +1,61 @@
+.frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--color-basil-soft);
+  color: var(--color-basil);
+}
+
+.card {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+}
+
+.thumb {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+}
+
+.photo {
+  object-fit: contain;
+  padding: 8%;
+}
+
+.icon {
+  width: 46%;
+  height: 46%;
+}
+
+.thumb .icon {
+  width: 60%;
+  height: 60%;
+}
+
+/* A distinct, quiet tint per aisle */
+.frame[data-category="dairy-eggs"] {
+  background: #e6eef6;
+  color: #2f5f8a;
+}
+
+.frame[data-category="bakery"] {
+  background: #f6ecdc;
+  color: #8a5a1f;
+}
+
+.frame[data-category="fruits-vegetables"] {
+  background: #e4f0e2;
+  color: #2f7a3b;
+}
+
+.frame[data-category="pantry"] {
+  background: #f2ebe0;
+  color: #6f5a36;
+}
+
+.frame[data-category="drinks"] {
+  background: #e2f1f1;
+  color: #1f6f73;
+}
