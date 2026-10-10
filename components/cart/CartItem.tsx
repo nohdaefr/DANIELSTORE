@@ -42,9 +42,8 @@ export default function CartItem({ product, quantity }: { product: Product; quan
           type="button"
           className={styles.remove}
           onClick={() => cartActions.remove(product.id)}
-          aria-label={`הסרת ${product.name} מהעגלה`}
         >
-          הסרה
+          הסרה<span className="visually-hidden"> של {product.name} מהעגלה</span>
         </button>
       </div>
 

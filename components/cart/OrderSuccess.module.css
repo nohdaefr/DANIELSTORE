@@ -1,0 +1,88 @@
+.box {
+  max-width: 38rem;
+  margin: 1rem auto 2rem;
+  padding: clamp(1.25rem, 5vw, 2.25rem);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.check {
+  display: inline-grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-basil-soft);
+  color: var(--color-basil);
+}
+
+.title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 7vw, 2.8rem);
+  line-height: 1;
+}
+
+.title:focus {
+  outline: none;
+}
+
+.lead {
+  margin: 0 0 1.25rem;
+  color: var(--color-muted);
+}
+
+.lead strong {
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  border-collapse: collapse;
+  text-align: start;
+  font-size: var(--text-sm);
+}
+
+.table th,
+.table td {
+  padding: 0.5rem 0.4rem;
+  border-bottom: 1px solid var(--color-line);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table td:last-child,
+.table th:last-child {
+  text-align: end;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.table thead th {
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.table tfoot th,
+.table tfoot td {
+  border-top: 2px solid var(--color-ink);
+  border-bottom: 0;
+  font-weight: 700;
+  font-size: var(--text-base);
+}
+
+.table tfoot td {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.note {
+  margin: 0 0 1.25rem;
+  color: var(--color-muted);
+}

@@ -4,6 +4,7 @@ A Hebrew, right-to-left online supermarket built with **Next.js 16 (App Router, 
 
 - Product catalog with search and categories, loaded from the database on the server
 - Shopping cart saved in `localStorage` (ids + quantities only — never prices)
+- Checkout in the cart: delivery details form → order → confirmation with the order number and the total computed by the database
 - `GET /api/products` and `POST /api/orders` route handlers
 - Orders are priced, stock-checked and saved by one atomic SQL function (`create_order`)
 - Row Level Security on every table; the privileged key is server-only
@@ -29,6 +30,7 @@ lib/
   env-guard.ts             Refuses secrets in NEXT_PUBLIC_ variables (build + runtime)
   validation.ts            zod schemas shared by the API
   cart.ts, cart-store.ts   Cart logic + localStorage store
+  checkout.ts              Checkout helpers for the browser (validation, request body, response handling)
 supabase/
   schema.sql                           Tables, constraints, RLS, privileges
   migrations/002_order_processing.sql  Customer details, idempotency, create_order()
@@ -117,6 +119,12 @@ Only these fields are accepted — prices, totals and payment data are rejected 
 | 413 / 415 | `PAYLOAD_TOO_LARGE` / `UNSUPPORTED_MEDIA_TYPE` |
 | 422 | `VALIDATION_FAILED`, `PRODUCT_NOT_FOUND`, `IDEMPOTENCY_KEY_REUSED` |
 | 500 / 503 | `INTERNAL_ERROR` / `SERVICE_UNAVAILABLE` — details only in the server log, matched by `requestId` |
+
+### Checkout flow (cart page)
+1. "המשך להזמנה" opens the delivery form (name, phone, city, address; email and notes optional). The form is validated in the browser with the same zod schema the server uses, and then validated again on the server.
+2. The browser sends **only** product ids, quantities and the delivery details, plus a new `Idempotency-Key`. While the content stays the same, a retry (double click, lost connection) reuses the same key, so the order is never created twice.
+3. On success, the confirmation shows the order number, lines and total **as returned by the database**, and the cart is cleared.
+4. Stock changed meanwhile → the server's message is shown, prices are reloaded, and a button sets the quantity to what is available. Without `SUPABASE_SERVICE_ROLE_KEY` the page explains that orders are unavailable and keeps the cart.
 
 ---
 

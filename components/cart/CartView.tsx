@@ -4,8 +4,12 @@ import Link from "next/link";
 import { calculateTotals, countItems } from "@/lib/cart";
 import { cartActions } from "@/lib/cart-store";
 import { formatAgorot } from "@/lib/format";
+import { MAX_QUANTITY_PER_PRODUCT } from "@/lib/validation";
 import StatusMessage from "../StatusMessage";
 import CartItem, { CartItemSkeleton, UnavailableCartItem } from "./CartItem";
+import CheckoutForm from "./CheckoutForm";
+import OrderSuccess from "./OrderSuccess";
+import { useCheckout } from "./useCheckout";
 import { useCartLines, useHydrated } from "./useCart";
 import { useCartProducts } from "./useCartProducts";
 import styles from "./CartView.module.css";
@@ -14,6 +18,10 @@ export default function CartView() {
   const hydrated = useHydrated();
   const lines = useCartLines();
   const products = useCartProducts(lines.map((line) => line.productId));
+  const checkout = useCheckout({ onStockChanged: products.retry });
+
+  // 0) Order just placed -> confirmation (the cart is already cleared)
+  if (checkout.order) return <OrderSuccess order={checkout.order} />;
 
   // 1) localStorage not read yet -> loading (avoids flashing "empty")
   if (!hydrated) return <CartSkeleton rows={2} />;
@@ -61,10 +69,23 @@ export default function CartView() {
   const { subtotalAgorot, unavailableIds } = calculateTotals(lines, productsById);
   const availableLines = lines.filter((line) => productsById.has(line.productId));
   const itemCount = countItems(availableLines);
+  const overStock = availableLines.some((line) => {
+    const product = productsById.get(line.productId);
+    return !product || line.quantity > Math.min(product.stockQuantity, MAX_QUANTITY_PER_PRODUCT);
+  });
+  const blockedReason =
+    availableLines.length === 0
+      ? "אין בעגלה מוצרים זמינים להזמנה."
+      : overStock
+        ? "יש לעדכן כמויות שחורגות מהמלאי לפני שליחת ההזמנה."
+        : null;
 
   return (
     <div className={styles.layout}>
-      <section aria-label="מוצרים בעגלה" className={styles.items}>
+      <section aria-labelledby="cart-items-title" className={styles.items}>
+        <h2 id="cart-items-title" className="visually-hidden">
+          מוצרים בעגלה
+        </h2>
         {unavailableIds.length > 0 && (
           <p className={styles.notice} role="status">
             {unavailableIds.length === 1
@@ -91,7 +112,10 @@ export default function CartView() {
         </button>
       </section>
 
-      <aside className={styles.summary} aria-labelledby="summary-title">
+      <aside
+        className={`${styles.summary} ${checkout.open ? styles.summaryOpen : ""}`}
+        aria-labelledby="summary-title"
+      >
         <h2 id="summary-title" className={styles.summaryTitle}>
           סיכום
         </h2>
@@ -108,10 +132,32 @@ export default function CartView() {
         <p className={styles.fineprint}>
           המחירים מתעדכנים מהמלאי. הסכום הסופי מחושב מחדש בשרת בזמן ביצוע ההזמנה.
         </p>
-        <button type="button" className="btn btn-primary" disabled style={{ width: "100%" }}>
-          מעבר לתשלום
-        </button>
-        <p className={styles.fineprint}>התשלום וההתחברות יתווספו בשלב הבא של הפרויקט.</p>
+        {checkout.open ? (
+          <CheckoutForm
+            checkout={checkout}
+            lines={availableLines}
+            subtotalAgorot={subtotalAgorot}
+            blockedReason={blockedReason}
+          />
+        ) : (
+          <>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ width: "100%" }}
+              onClick={() => checkout.setOpen(true)}
+              disabled={availableLines.length === 0}
+              data-testid="start-checkout"
+            >
+              המשך להזמנה
+            </button>
+            {checkout.problem && checkout.problem.kind !== "fields" && (
+              <p className={styles.notice} role="alert">
+                {checkout.problem.message}
+              </p>
+            )}
+          </>
+        )}
       </aside>
     </div>
   );
