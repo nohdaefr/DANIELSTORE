@@ -2,9 +2,10 @@ import Link from "next/link";
 import { Suspense } from "react";
 import CategoryNav from "@/components/CategoryNav";
 import ProductGrid, { ProductGridSkeleton } from "@/components/ProductGrid";
-import SearchBar from "@/components/SearchBar";
+import ShelfHero from "@/components/ShelfHero";
 import StatusMessage from "@/components/StatusMessage";
 import RetryButton from "@/components/RetryButton";
+import MiniCart from "@/components/cart/MiniCart";
 import { logServerError, newRequestId } from "@/lib/api";
 import { CatalogError, getCatalog } from "@/lib/catalog";
 import { SupabaseConfigError } from "@/lib/supabase";
@@ -13,18 +14,18 @@ import styles from "./page.module.css";
 
 export default function HomePage({ searchParams }: PageProps<"/">) {
   return (
-    <>
-      <section className={styles.intro}>
-        <h1 className={styles.title}>הסל השבועי, בלי לעמוד בתור</h1>
-        <p className={styles.lead}>חלב, לחם, ירקות ומה שעוד חסר בבית. בוחרים, מוסיפים לעגלה, וזהו.</p>
-      </section>
-
-      {/* searchParams and the database are request-time data, so they
-          stream in behind a skeleton (required with Cache Components). */}
-      <Suspense fallback={<StorefrontSkeleton />}>
-        <Storefront searchParams={searchParams} />
-      </Suspense>
-    </>
+    <div className={styles.layout}>
+      <div className={styles.catalog}>
+        {/* searchParams and the database are request-time data, so they
+            stream in behind a skeleton (required with Cache Components). */}
+        <Suspense fallback={<StorefrontSkeleton />}>
+          <Storefront searchParams={searchParams} />
+        </Suspense>
+      </div>
+      <aside className={styles.sidebar} aria-label="העגלה שלי">
+        <MiniCart />
+      </aside>
+    </div>
   );
 }
 
@@ -35,36 +36,49 @@ async function Storefront({ searchParams }: { searchParams: PageProps<"/">["sear
   try {
     catalog = await getCatalog(filters);
   } catch (error) {
-    if (error instanceof SupabaseConfigError) return <SetupNotice />;
+    if (error instanceof SupabaseConfigError) {
+      return (
+        <>
+          <ShelfHero />
+          <SetupNotice />
+        </>
+      );
+    }
     if (error instanceof CatalogError) {
       logServerError(newRequestId(), "storefront: catalog unavailable", error.cause ?? error); // server log only, redacted
-      return <CatalogUnavailable />;
+      return (
+        <>
+          <ShelfHero />
+          <CatalogUnavailable />
+        </>
+      );
     }
     throw error; // anything unexpected -> app/error.tsx
   }
 
   const { categories, activeCategory, products } = catalog;
-  const heading = activeCategory?.name ?? "כל המוצרים";
+  const browsing = !filters.query && !activeCategory && !filters.categorySlug;
+  const heading = filters.query ? `תוצאות חיפוש: ${filters.query}` : (activeCategory?.name ?? "כל המוצרים");
+  const Heading = browsing ? "h2" : "h1";
 
   return (
-    <div className={styles.store}>
-      <div className={styles.controls}>
-        <SearchBar query={filters.query} categorySlug={activeCategory?.slug ?? null} />
-        <CategoryNav categories={categories} activeSlug={activeCategory?.slug ?? null} query={filters.query} />
-      </div>
+    <>
+      {browsing && <ShelfHero />}
+      <CategoryNav categories={categories} activeSlug={activeCategory?.slug ?? null} query={filters.query} />
 
-      <section aria-labelledby="results-title">
+      <section aria-labelledby="results-title" className={styles.results}>
         <div className={styles.resultsHeader}>
-          <h2 id="results-title" className={styles.resultsTitle}>
+          <Heading id="results-title" className={styles.resultsTitle}>
             {heading}
-          </h2>
+          </Heading>
           <p className={styles.count} aria-live="polite">
-            {filters.query ? `${products.length} תוצאות עבור "${filters.query}"` : `${products.length} מוצרים`}
+            {filters.query && activeCategory ? `במחלקת ${activeCategory.name}, ` : ""}
+            {products.length === 1 ? "מוצר אחד" : `${products.length} מוצרים`}
           </p>
         </div>
 
         {products.length > 0 ? (
-          <ProductGrid products={products} />
+          <ProductGrid products={products} headingLevel={browsing ? 3 : 2} />
         ) : (
           <StatusMessage
             title="לא מצאנו מוצרים"
@@ -83,18 +97,16 @@ async function Storefront({ searchParams }: { searchParams: PageProps<"/">["sear
           </StatusMessage>
         )}
       </section>
-    </div>
+    </>
   );
 }
 
 function StorefrontSkeleton() {
   return (
-    <div className={styles.store} aria-busy="true" aria-label="טוען מוצרים">
-      <div className={styles.controls}>
-        <div className="skeleton" style={{ height: 52 }} />
-        <div className="skeleton" style={{ height: 44, width: "70%" }} />
-      </div>
-      <div className="skeleton" style={{ height: 32, width: 180, marginBottom: "1rem" }} />
+    <div aria-busy="true" aria-label="טוען מוצרים" className={styles.skeleton}>
+      <div className="skeleton" style={{ height: 200, borderRadius: 16 }} />
+      <div className="skeleton" style={{ height: 56, borderRadius: 16 }} />
+      <div className="skeleton" style={{ height: 32, width: 180 }} />
       <ProductGridSkeleton />
     </div>
   );

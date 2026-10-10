@@ -5,6 +5,7 @@ import { cartActions } from "@/lib/cart-store";
 import { MAX_QUANTITY_PER_PRODUCT } from "@/lib/validation";
 import QuantityStepper from "../QuantityStepper";
 import { useCartLines } from "./useCart";
+import styles from "./AddToCartButton.module.css";
 
 interface AddToCartButtonProps {
   productId: number;
@@ -18,7 +19,7 @@ export default function AddToCartButton({ productId, productName, stockQuantity 
 
   if (max === 0) {
     return (
-      <button type="button" className="btn btn-secondary" disabled style={{ width: "100%" }}>
+      <button type="button" className={styles.soldOut} disabled>
         אזל מהמלאי<span className="visually-hidden">: {productName}</span>
       </button>
     );
@@ -26,13 +27,11 @@ export default function AddToCartButton({ productId, productName, stockQuantity 
 
   if (quantity === 0) {
     return (
-      <button
-        type="button"
-        className="btn btn-primary"
-        style={{ width: "100%" }}
-        onClick={() => cartActions.add(productId, max)}
-      >
-        הוספה לעגלה<span className="visually-hidden">: {productName}</span>
+      <button type="button" className={styles.add} onClick={() => cartActions.add(productId, max)}>
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+        </svg>
+        הוספה<span className="visually-hidden"> לעגלה: {productName}</span>
       </button>
     );
   }

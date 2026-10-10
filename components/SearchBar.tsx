@@ -28,13 +28,13 @@ export default function SearchBar({ query, categorySlug }: SearchBarProps) {
         type="search"
         defaultValue={query}
         maxLength={MAX_SEARCH_LENGTH}
-        placeholder="מה להוסיף לסל? למשל: חלב, פיתות, טחינה"
+        placeholder="חיפוש מוצר: חלב, פיתות, טחינה…"
         className={styles.input}
         autoComplete="off"
         enterKeyHint="search"
       />
       {categorySlug && <input type="hidden" name="category" value={categorySlug} />}
-      <button type="submit" className={`btn btn-primary ${styles.submit}`}>
+      <button type="submit" className={styles.submit}>
         חיפוש
       </button>
     </Form>

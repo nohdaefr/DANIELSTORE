@@ -8,9 +8,30 @@
   overflow: hidden;
 }
 
+/* On product cards: a filled bar, so "already in the cart" reads at a glance */
 .lg {
   width: 100%;
   grid-template-columns: 44px 1fr 44px;
+  border-color: var(--color-basil);
+  background: var(--color-basil);
+  color: #fff;
+}
+
+.lg .button {
+  background: var(--color-basil);
+  color: #fff;
+}
+
+.lg .button:hover:not(:disabled) {
+  background: var(--color-basil-dark);
+}
+
+.lg .button:disabled {
+  color: #8fb39f;
+}
+
+.lg .button:focus-visible {
+  box-shadow: inset 0 0 0 3px var(--color-tag);
 }
 
 .button {

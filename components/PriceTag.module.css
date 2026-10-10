@@ -2,13 +2,11 @@
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
-  align-self: flex-start;
-  padding: 0.3rem 0.7rem 0.35rem;
+  padding: 0.35rem 0.65rem 0.3rem;
   background: var(--color-tag);
   color: var(--color-tag-ink);
-  border-radius: 3px var(--radius-sm) var(--radius-sm) 3px;
-  /* the little punched hole of a shelf tag */
-  background-image: radial-gradient(circle at calc(100% - 7px) 9px, var(--color-surface) 2.5px, transparent 3px);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  box-shadow: 0 2px 0 rgba(43, 33, 0, 0.12);
 }
 
 .amount {
@@ -20,17 +18,17 @@
 }
 
 .currency {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   margin-top: 0.2rem;
   margin-inline-end: 0.12rem;
 }
 
 .shekels {
-  font-size: 2.6rem;
+  font-size: 2.3rem;
 }
 
 .agorot {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   margin-top: 0.15rem;
   margin-inline-start: 0.08rem;
   text-decoration: underline;
@@ -39,7 +37,8 @@
 }
 
 .unit {
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   margin-top: 0.15rem;
+  white-space: nowrap;
 }

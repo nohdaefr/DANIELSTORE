@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatAgorot, splitPrice, toAgorot } from "@/lib/format";
+import { formatAgorot, splitPrice, toAgorot, unitPriceLabel } from "@/lib/format";
 import { createOrderSchema, normalizePhone, parseCatalogFilters, parseProductIds, sanitizeSearch } from "@/lib/validation";
 
 describe("money formatting", () => {
@@ -98,5 +98,24 @@ describe("phone normalization", () => {
     ["(03) 123-4567", "031234567"],
   ])("%s -> %s", (input, expected) => {
     expect(normalizePhone(input)).toBe(expected);
+  });
+});
+
+
+describe("unitPriceLabel (price per 100 g / 100 ml / unit)", () => {
+  const plain = (s: string | null) => s?.replace(/[‏ ]/g, " ").replace(/\s+/g, " ").trim() ?? null;
+  it.each([
+    [6.9, "1 ליטר", "0.69 ₪ ל־100 מ״ל"],
+    [3.5, "1.5 ליטר", "0.23 ₪ ל־100 מ״ל"],
+    [39.9, '750 מ"ל', "5.32 ₪ ל־100 מ״ל"],
+    [5.5, "250 גרם", "2.20 ₪ ל־100 גרם"],
+    [11.9, '1 ק"ג', "1.19 ₪ ל־100 גרם"],
+    [13.5, "12 יחידות", "1.13 ₪ ליחידה"],
+  ])("%s for %s -> %s", (price, unit, expected) => {
+    expect(plain(unitPriceLabel(price, unit))).toBe(expected);
+  });
+
+  it.each(['ק"ג', "יחידה", "1 יחידות", "חבילה", ""])("no label for %s", (unit) => {
+    expect(unitPriceLabel(10, unit)).toBeNull();
   });
 });

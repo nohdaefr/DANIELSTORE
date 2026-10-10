@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Header from "@/components/Header";
+import CartBar from "@/components/cart/CartBar";
 import { fontVariables } from "@/lib/fonts";
 import "./globals.css";
 
@@ -24,8 +25,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <footer className="footer">
-          <div className="container">סופר שכונתי — פרויקט לימודי. המחירים להמחשה בלבד.</div>
+          <div className="container footer-inner">
+            <span className="footer-brand">סופר שכונתי</span>
+            <p>פרויקט לימודי. המחירים להמחשה בלבד, אין חיוב ולא נשמרים פרטי תשלום.</p>
+          </div>
         </footer>
+        <CartBar />
       </body>
     </html>
   );

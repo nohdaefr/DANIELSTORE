@@ -156,6 +156,9 @@ export default function CartView() {
                 {checkout.problem.message}
               </p>
             )}
+            <Link href="/" className={styles.continue}>
+              להמשך קניות
+            </Link>
           </>
         )}
       </aside>

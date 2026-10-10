@@ -1,7 +1,13 @@
+/* Aisle bar: sticks under the header on larger screens */
 .nav {
-  /* Horizontal scroll on narrow screens instead of wrapping into many rows */
-  margin-inline: calc(var(--gutter) * -1);
-  padding-inline: var(--gutter);
+  position: sticky;
+  top: var(--header-height);
+  z-index: 20;
+  margin-bottom: 1.25rem;
+  padding: 0.5rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -12,35 +18,34 @@
 
 .list {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.25rem;
+  width: max-content;
+  min-width: 100%;
   margin: 0;
-  padding: 0.25rem 0;
+  padding: 0;
   list-style: none;
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   min-height: 44px;
-  padding: 0.4rem 1rem;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  background: var(--color-surface);
+  padding: 0.35rem 0.95rem;
+  border-radius: var(--radius-md);
+  color: var(--color-ink);
   font-weight: 600;
   white-space: nowrap;
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .chip:hover {
-  border-color: var(--color-basil);
+  background: var(--color-basil-soft);
 }
 
 .chip[aria-current="page"] {
   background: var(--color-basil);
-  border-color: var(--color-basil);
   color: #fff;
 }
 
@@ -50,10 +55,13 @@
   height: 22px;
 }
 
-/* Phones: one scrollable row instead of several wrapped rows */
-@media (max-width: 600px) {
-  .list {
-    flex-wrap: nowrap;
-    width: max-content;
+/* Phones: the header is taller there, so the aisle bar scrolls with the page */
+@media (max-width: 760px) {
+  .nav {
+    position: static;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    border-radius: 0;
+    border-inline: 0;
   }
 }

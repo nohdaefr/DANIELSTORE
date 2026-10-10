@@ -29,3 +29,33 @@ export function splitPrice(shekels: number): { shekels: string; agorot: string }
     agorot: String(total % 100).padStart(2, "0"),
   };
 }
+
+const UNIT_PATTERN = /^\s*(\d+(?:\.\d+)?)?\s*(גרם|ק["״]ג|ליטר|מ["״]ל|יחידות|יחידה)\s*$/;
+
+/**
+ * Comparison price, as printed on Israeli shelf labels:
+ * "1 ליטר" at 6.90 -> "0.69 ₪ ל־100 מ״ל". Null when it adds nothing
+ * (sold by the kilo, or a single item) or the unit isn't recognized.
+ */
+export function unitPriceLabel(price: number, unit: string): string | null {
+  const match = UNIT_PATTERN.exec(unit);
+  if (!match || !(price > 0)) return null;
+  const amount = match[1] === undefined ? null : Number(match[1]);
+  const kind = match[2].replace("״", '"');
+  if (amount === null || amount <= 0) return null;
+
+  switch (kind) {
+    case "גרם":
+      return `${formatPrice((price / amount) * 100)} ל־100 גרם`;
+    case 'ק"ג':
+      return `${formatPrice((price / (amount * 1000)) * 100)} ל־100 גרם`;
+    case "ליטר":
+      return `${formatPrice((price / (amount * 1000)) * 100)} ל־100 מ״ל`;
+    case 'מ"ל':
+      return `${formatPrice((price / amount) * 100)} ל־100 מ״ל`;
+    case "יחידות":
+      return amount > 1 ? `${formatPrice(price / amount)} ליחידה` : null;
+    default:
+      return null;
+  }
+}

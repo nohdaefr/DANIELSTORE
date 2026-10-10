@@ -4,17 +4,23 @@
   place-items: center;
   overflow: hidden;
   background: var(--color-basil-soft);
-  color: var(--color-basil);
 }
 
 .card {
-  aspect-ratio: 1 / 1;
-  border-radius: var(--radius-md);
+  aspect-ratio: 5 / 4;
+  border-radius: 0;
 }
 
 .thumb {
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+}
+
+.mini {
+  width: 48px;
+  height: 48px;
   flex-shrink: 0;
   border-radius: var(--radius-sm);
 }
@@ -24,38 +30,36 @@
   padding: 8%;
 }
 
-.icon {
-  width: 46%;
-  height: 46%;
+.art {
+  width: 78%;
+  height: 92%;
+  margin-top: 4%;
 }
 
-.thumb .icon {
-  width: 60%;
-  height: 60%;
+.thumb .art,
+.mini .art {
+  width: 92%;
+  height: 92%;
+  margin-top: 0;
 }
 
-/* A distinct, quiet tint per aisle */
+/* A quiet tint per aisle, like the back panel of a shelf */
 .frame[data-category="dairy-eggs"] {
-  background: #e6eef6;
-  color: #2f5f8a;
+  background: #e7eff6;
 }
 
 .frame[data-category="bakery"] {
-  background: #f6ecdc;
-  color: #8a5a1f;
+  background: #f5ede0;
 }
 
 .frame[data-category="fruits-vegetables"] {
-  background: #e4f0e2;
-  color: #2f7a3b;
+  background: #e6f0e3;
 }
 
 .frame[data-category="pantry"] {
-  background: #f2ebe0;
-  color: #6f5a36;
+  background: #f2ece2;
 }
 
 .frame[data-category="drinks"] {
-  background: #e2f1f1;
-  color: #1f6f73;
+  background: #e3f0f0;
 }

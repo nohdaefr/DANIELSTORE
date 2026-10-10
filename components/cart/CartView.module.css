@@ -129,3 +129,13 @@
     position: static;
   }
 }
+
+.continue {
+  align-self: center;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-basil);
+  font-weight: 700;
+  text-underline-offset: 3px;
+}

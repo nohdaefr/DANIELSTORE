@@ -1,0 +1,29 @@
+.add,
+.soldOut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  min-height: 44px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+}
+
+.add {
+  border: 1.5px solid var(--color-basil);
+  background: var(--color-surface);
+  color: var(--color-basil);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.add:hover {
+  background: var(--color-basil);
+  color: #fff;
+}
+
+.soldOut {
+  border: 1px dashed var(--color-line);
+  background: var(--color-ground);
+  color: var(--color-muted);
+}

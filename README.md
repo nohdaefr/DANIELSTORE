@@ -4,6 +4,8 @@ A Hebrew, right-to-left online supermarket built with **Next.js 16 (App Router, 
 
 - Product catalog with search and categories, loaded from the database on the server
 - Shopping cart saved in `localStorage` (ids + quantities only — never prices)
+- Store layout like a real online supermarket: search in the header, a sticky aisle bar, product cards with a shelf-tag price and the price per 100 g / 100 ml, a side cart on wide screens and a cart bar at the bottom on phones
+- Products without a photo get a drawing of their packaging (`components/ProductArt.tsx`, chosen by SKU in `lib/product-art.ts`)
 - Checkout in the cart: delivery details form → order → confirmation with the order number and the total computed by the database
 - `GET /api/products` and `POST /api/orders` route handlers
 - Orders are priced, stock-checked and saved by one atomic SQL function (`create_order`)
